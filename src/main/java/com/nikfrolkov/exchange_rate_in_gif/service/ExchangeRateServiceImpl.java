@@ -1,6 +1,7 @@
 package com.nikfrolkov.exchange_rate_in_gif.service;
 
 import com.nikfrolkov.exchange_rate_in_gif.client.OpenExchangeRatesClient;
+import com.nikfrolkov.exchange_rate_in_gif.exception_handling.NoSuchExchangeRatesException;
 import com.nikfrolkov.exchange_rate_in_gif.service.converter.ExchangeRatesConverter;
 import com.nikfrolkov.exchange_rate_in_gif.service.model.ExchangeRates;
 import com.nikfrolkov.exchange_rate_in_gif.service.utils.DateUtils;
@@ -51,6 +52,9 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
     public String getGifTag(String currency) {
         BigDecimal todayExchangeRate = getTodayExcangeRate(currency);
         BigDecimal yesterdayExchangeRate = getYesterdayExcangeRate(currency);
+        if (todayExchangeRate == null || yesterdayExchangeRate == null) {
+            throw new NoSuchExchangeRatesException("ExchangeRates this currency not found");
+        }
         return getGifTag(todayExchangeRate, yesterdayExchangeRate);
     }
 }
