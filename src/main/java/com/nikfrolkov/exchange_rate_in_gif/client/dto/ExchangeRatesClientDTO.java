@@ -1,5 +1,4 @@
-package com.nikfrolkov.exchange_rate_in_gif.service.model;
-
+package com.nikfrolkov.exchange_rate_in_gif.client.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +12,7 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExchangeRates {
+public class ExchangeRatesClientDTO {
     private String disclaimer;
     private String license;
     private Integer timestamp;
