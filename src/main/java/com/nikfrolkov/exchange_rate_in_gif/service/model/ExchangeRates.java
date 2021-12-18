@@ -1,9 +1,10 @@
-package com.nikfrolkov.exchange_rate_in_gif.model;
+package com.nikfrolkov.exchange_rate_in_gif.service.model;
 
 
 import java.util.Map;
 
-public class ExchangeRate {
+
+public class ExchangeRates {
     private String disclaimer;
     private String license;
     private Integer timestamp;
@@ -50,7 +51,7 @@ public class ExchangeRate {
         this.rates = rates;
     }
 
-    public ExchangeRate(String disclaimer, String license, Integer timestamp, String base, Map<String, Double> rates) {
+    public ExchangeRates(String disclaimer, String license, Integer timestamp, String base, Map<String, Double> rates) {
         this.disclaimer = disclaimer;
         this.license = license;
         this.timestamp = timestamp;
@@ -58,6 +59,17 @@ public class ExchangeRate {
         this.rates = rates;
     }
 
-    public ExchangeRate() {
+    public ExchangeRates() {
+    }
+
+    @Override
+    public String toString() {
+        return "ExchangeRate{" +
+                "disclaimer='" + disclaimer + '\'' +
+                ", license='" + license + '\'' +
+                ", timestamp=" + timestamp +
+                ", base='" + base + '\'' +
+                ", rates=" + rates +
+                '}';
     }
 }
