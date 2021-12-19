@@ -1,15 +1,13 @@
-openexchangerates:
+rates-api:
   url: https://openexchangerates.org/api
   app_id: 6fac075b92df4a27b5f2fe14675baf8a
-  base: USD
+  base_currency: USD
 
-
-giphy:
+gif-api:
   url: https://api.giphy.com/v1/gifs
   api_key: kpEF41jptjKmP5mx1lNI1MUg9iOH08RE
-  tags:
-    - rich
-    - broke
+  rich_tag: rich
+  broke_tag: broke
 
 
 

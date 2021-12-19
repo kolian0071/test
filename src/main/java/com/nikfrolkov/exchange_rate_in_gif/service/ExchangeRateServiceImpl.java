@@ -1,60 +1,41 @@
 package com.nikfrolkov.exchange_rate_in_gif.service;
 
-import com.nikfrolkov.exchange_rate_in_gif.client.OpenExchangeRatesClient;
-import com.nikfrolkov.exchange_rate_in_gif.exception_handling.NoSuchExchangeRatesException;
-import com.nikfrolkov.exchange_rate_in_gif.service.converter.ExchangeRatesConverter;
-import com.nikfrolkov.exchange_rate_in_gif.service.model.ExchangeRates;
+import com.nikfrolkov.exchange_rate_in_gif.client.ExchangeRateClient;
+import com.nikfrolkov.exchange_rate_in_gif.client.dto.ExchangeRateDto;
+import com.nikfrolkov.exchange_rate_in_gif.exception_handling.RateExchangeException;
 import com.nikfrolkov.exchange_rate_in_gif.service.utils.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Service
+@RequiredArgsConstructor
 public class ExchangeRateServiceImpl implements ExchangeRateService {
 
-    private final OpenExchangeRatesClient openExchangeRatesClient;
-    private final ExchangeRatesConverter exchangeRatesConverter;
-
-    @Value("${openexchangerates.app_id}")
+    @Value("${rates-api.app_id}")
     private String app_id;
 
-    @Autowired
-    public ExchangeRateServiceImpl(OpenExchangeRatesClient client, ExchangeRatesConverter exchangeRatesConverter) {
-        this.openExchangeRatesClient = client;
-        this.exchangeRatesConverter = exchangeRatesConverter;
-    }
+    @Value("${rates-api.base_currency}")
+    private String baseCurrency;
 
-    private BigDecimal getTodayExcangeRate(String currency) {
-        ExchangeRates todayExcangeRates = exchangeRatesConverter.mapToExchangeRates(openExchangeRatesClient
-                .getHistoricalRate(DateUtils.today().toString(), app_id));
-        return todayExcangeRates.getRates().get(currency);
-    }
+    private final ExchangeRateClient exchangeRateClient;
 
-    private BigDecimal getYesterdayExcangeRate(String currency) {
-        ExchangeRates yesterdayExcangeRates = exchangeRatesConverter.mapToExchangeRates(openExchangeRatesClient
-                .getHistoricalRate(DateUtils.yesterday().toString(), app_id));
-        return yesterdayExcangeRates.getRates().get(currency);
-    }
-
-    private String getGifTag(BigDecimal todayExchangeRate, BigDecimal yesterdayExchangeRate) {
-        String gifTag;
-        if (todayExchangeRate.compareTo(yesterdayExchangeRate) > 0) {
-            gifTag = "rich";
-        } else {
-            gifTag = "broke";
+    public BigDecimal getRate(LocalDate date, String currency) {
+        BigDecimal exchangeRate;
+        try {
+            exchangeRate = getExchangeRate(DateUtils.today(), currency);
+        } catch (Exception exception) {
+            throw new RateExchangeException("Can not get exchange rate");
         }
-        return gifTag;
+        return exchangeRate;
     }
 
-
-    public String getGifTag(String currency) {
-        BigDecimal todayExchangeRate = getTodayExcangeRate(currency);
-        BigDecimal yesterdayExchangeRate = getYesterdayExcangeRate(currency);
-        if (todayExchangeRate == null || yesterdayExchangeRate == null) {
-            throw new NoSuchExchangeRatesException("ExchangeRates this currency not found");
-        }
-        return getGifTag(todayExchangeRate, yesterdayExchangeRate);
+    private BigDecimal getExchangeRate(LocalDate date, String currency) {
+        ExchangeRateDto exchangeRateDto = exchangeRateClient
+                .getHistoricalRate(date.toString(), app_id, baseCurrency, currency);
+        return exchangeRateDto.getRates().get(currency);
     }
 }
