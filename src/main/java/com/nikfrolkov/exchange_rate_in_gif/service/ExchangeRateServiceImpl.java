@@ -24,18 +24,16 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
     private final ExchangeRateClient exchangeRateClient;
 
     public BigDecimal getRate(LocalDate date, String currency) {
-        BigDecimal exchangeRate;
-        try {
-            exchangeRate = getExchangeRate(DateUtils.today(), currency);
-        } catch (Exception exception) {
-            throw new RateExchangeException("Can not get exchange rate");
-        }
-        return exchangeRate;
+        return getExchangeRate(DateUtils.today(), currency);
     }
 
     private BigDecimal getExchangeRate(LocalDate date, String currency) {
         ExchangeRateDto exchangeRateDto = exchangeRateClient
                 .getHistoricalRate(date.toString(), app_id, baseCurrency, currency);
-        return exchangeRateDto.getRates().get(currency);
+        BigDecimal exchangeRate = exchangeRateDto.getRates().get(currency);
+        if (exchangeRate==null) {
+            throw new RateExchangeException("Can not get exchange rate");
+        }
+        return exchangeRate;
     }
 }
