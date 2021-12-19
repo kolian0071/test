@@ -24,7 +24,7 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
     private final ExchangeRateClient exchangeRateClient;
 
     public BigDecimal getRate(LocalDate date, String currency) {
-        return getExchangeRate(DateUtils.today(), currency);
+        return getExchangeRate(date, currency);
     }
 
     private BigDecimal getExchangeRate(LocalDate date, String currency) {
