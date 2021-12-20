@@ -29,3 +29,11 @@ Must Have
 Nice to Have
 
 ·        Сборка и запуск Docker контейнера с этим сервисом
+
+Инструкция по запуску
+
+С использованием Docker:
+- docker build -t gif-api .
+- docker run -p8080:8080 gif-api
+
+После запуска контейнера и старта сервиса открываем в браузере (или Postman) страницу http://localhost:8080/api/v1/gif/[currency] (вместо [currency] необходимо указать код доступной валюсы, доступной на https://docs.openexchangerates.org/docs/supported-currencies. Для стандартного тарифа в качестве базовой валюты сервис openexchangerates.org предоставляет только USD. Настройки базовой валюты и другие параметры можно поменять в application.properties файле. Сервис возвращает клиенту JSON объект c адресом GIF в соответствии с заданием.
