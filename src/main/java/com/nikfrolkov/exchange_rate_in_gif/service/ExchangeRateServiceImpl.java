@@ -3,7 +3,6 @@ package com.nikfrolkov.exchange_rate_in_gif.service;
 import com.nikfrolkov.exchange_rate_in_gif.client.ExchangeRateClient;
 import com.nikfrolkov.exchange_rate_in_gif.client.dto.ExchangeRateDto;
 import com.nikfrolkov.exchange_rate_in_gif.exception_handling.RateExchangeException;
-import com.nikfrolkov.exchange_rate_in_gif.service.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
